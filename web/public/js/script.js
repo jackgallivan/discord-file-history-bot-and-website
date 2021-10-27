@@ -46,7 +46,10 @@ class TableFilterClass {
 				'none'
 			],
 			col_widths: ['150px', '150px', '100px', '120px', '300px', '250px'],
-			popup_filters: true,
+			popup_filters: {
+				image_active: '/tablefilter/style/themes/custom/icn_filter_black.png',
+				image: '/tablefilter/style/themes/custom/icn_filter_white.png'
+			},
 			paging: {
 				results_per_page: ['Results per page: ', [10, 25, 50, 100]]
 			},
@@ -59,11 +62,14 @@ class TableFilterClass {
 					'Click the headers cells to sort the data.<br><br>' +
 					'Use the drop-down menus to filter by individual values.<br>',
 				btn_text: 'Help',
-				load_filters_on_demand: true
+				load_filters_on_demand: true,
+				themes: [{
+					name: 'transparent'
+				}]
 			},
 		}
 
-		// Create the filter using thte config, and return it
+		// Create the filter using the above config
 		tf = new TableFilter(this.table, filterConfig)
 		return tf
 	}
