@@ -1,1 +1,38 @@
-{{!-- TODO --}}
+<header>
+	<h1>File Upload History</h1>
+	<h2>Server: {{servername}}</h2>
+</header>
+<table id='display-data'>
+	<thead>
+		<tr>
+			<th>Channel</th>
+			<th>Username</th>
+			<th>Date</th>
+			<th>File Type</th>
+			<th>File Name</th>
+			<th>Preview</th>
+		</tr>
+	</thead>
+	<tbody id='data-table'>
+		{{#if dataList}}
+			{{#each dataList}}
+				<tr>
+					<td class='channel'>{{this.channel}}</td>
+					<td class='username'>{{this.username}}</td>
+					<td class='date'>{{this.date}}</td>
+					<td class='filetype'>{{this.filetype}}</td>
+					<td><a class='filename' href='{{this.url}}'>{{this.filename}}</a></td>
+					<td class='preview'>
+						{{#if image}}
+						<img src='{{this.url}}'>
+						{{else}}
+						<span>Preview unavailable</span>
+						{{/if}}
+					</td>
+				</tr>
+			{{/each}}
+		{{/if}}
+	</tbody>
+</table>
+<script src='tablefilter/tablefilter.js'></script>
+<script src='/js/script.js'></script>
