@@ -15,7 +15,7 @@ app.engine('hbs', handlebars({
 
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
+app.get('/a8Djes0', (req, res) => {
 	const content = {}
 	content.servername = 'Test Server'
 	content.dataList = [
