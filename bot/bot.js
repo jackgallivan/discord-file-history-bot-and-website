@@ -6,40 +6,40 @@
 // [3]	JavaScript Reference
 //		https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
 
-const eris = require("eris")
-const credentials = require("../credentials.js")
+const eris = require('eris')
+const credentials = require('../credentials.js')
 
-const PREFIX = "uh!"
-const BOT_OWNER_ID = "155066306415034368"
+const PREFIX = 'uh!'
+const BOT_OWNER_ID = '155066306415034368'
 
 const bot = new eris.CommandClient(credentials.bot_token, {}, {
-	description: "Provides a web interface to view file uploads to your server.",
+	description: 'Provides a web interface to view file uploads to your server.',
 	prefix: PREFIX
 })
 
-bot.on("ready", () => {
-	console.log("Connected and ready.")
+bot.on('ready', () => {
+	console.log('Connected and ready.')
 })
 
-bot.on("error", err => {
+bot.on('error', err => {
 	console.error(err)
 })
 
-bot.registerCommand("init", (msg, args) => {
-	msg.channel.createMessage("Logging file upload history...")
+bot.registerCommand('init', (msg, args) => {
+	msg.channel.createMessage('Logging file upload history...')
 
 	// TODO: log file uploads to database
 
-	return "File uploads logged."
+	return 'File uploads logged.'
 }, {
 	argsRequired: false,
-	description: "Logs file upload history."
+	description: 'Logs file upload history.'
 })
 
-bot.registerCommand("url", (msg, args) => {
+bot.registerCommand('url', (msg, args) => {
 	// TODO: query URL from web server
 
-	url = "http://localhost:3000/a8Djes0"
+	url = 'http://localhost:3000/a8Djes0'
 
 	return url
 }, {
