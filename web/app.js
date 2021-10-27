@@ -16,7 +16,28 @@ app.engine('hbs', handlebars({
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-	content = {}
+	const content = {}
+	content.servername = 'Test Server'
+	content.dataList = [
+		{
+			channel: '#fun',
+			username: 'mutable#4057',
+			date: '10/26/2021',
+			filetype: 'PNG',
+			filename: 'test_image.png',
+			image: true,
+			url: 'https://cdn.discordapp.com/attachments/902068000927121469/902721484143865897/test_image.png'
+		},
+		{
+			channel: '#general',
+			username: 'mutable#4057',
+			date: '10/25/2021',
+			filetype: 'PDF',
+			filename: 'CS361_Assignment_3_Fall_2021.pdf',
+			image: false,
+			url: 'https://cdn.discordapp.com/attachments/902068000927121469/902279497750044692/CS361_Assignment_3_Fall_2021.pdf'
+		}
+	]
 	res.render('home', content)
 })
 
