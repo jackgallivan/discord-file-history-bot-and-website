@@ -9,12 +9,13 @@
 const eris = require('eris')
 const credentials = require('../credentials')
 
-const PREFIX = 'uh!'
+const PREFIX = 'hist!'
 const BOT_OWNER_ID = '155066306415034368'
 
 const bot = new eris.CommandClient(credentials.bot_token, {}, {
 	description: 'Provides a web interface to view file uploads to your server.',
-	prefix: PREFIX
+	prefix: PREFIX,
+	owner: ''
 })
 
 bot.on('ready', () => {
@@ -33,7 +34,7 @@ bot.registerCommand('init', (msg, args) => {
 	return 'File uploads logged.'
 }, {
 	argsRequired: false,
-	description: 'Logs file upload history.'
+	description: 'Logs file upload history. Use after adding the bot to the server to log older message attachments.'
 })
 
 bot.registerCommand('url', (msg, args) => {
@@ -44,7 +45,7 @@ bot.registerCommand('url', (msg, args) => {
 	return url
 }, {
 	argsRequired: false,
-	description: "Responds with the URL to your server's file upload history."
+	description: "Produces the URL to the web page showing your server's file upload history."
 })
 
 bot.on('messageCreate', async (msg) => {
