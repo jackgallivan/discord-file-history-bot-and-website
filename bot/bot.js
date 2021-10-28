@@ -7,7 +7,7 @@
 //		https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
 
 const eris = require('eris')
-const credentials = require('../credentials.js')
+const credentials = require('../credentials')
 
 const PREFIX = 'uh!'
 const BOT_OWNER_ID = '155066306415034368'

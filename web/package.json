@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "express-handlebars": "^5.3.4"
+    "express-handlebars": "^5.3.4",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "tablefilter": "^0.7.2"

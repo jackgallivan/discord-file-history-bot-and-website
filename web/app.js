@@ -1,11 +1,11 @@
+const mysql = require('./dbcon')
+
 const express = require('express')
 const app = express()
 const PORT = 3000
 
 const handlebars = require('express-handlebars')
-
 app.set('view engine', 'hbs')
-
 app.engine('hbs', handlebars({
 	layoutsDir: __dirname + '/views/layouts',
 	extname: 'hbs',
