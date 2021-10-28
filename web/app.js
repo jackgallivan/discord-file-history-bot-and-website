@@ -20,22 +20,22 @@ app.get('/a8Djes0', (req, res) => {
 	content.servername = 'Test Server'
 	content.dataList = [
 		{
-			channel: '#fun',
-			username: 'mutable#4057',
-			date: '10/26/2021',
+			channel: '#general',
+			username: 'mutable',
+			date: '10/27/2021',
+			filetype: 'PDF',
+			filename: 'CS361_Assignment_5_Fall_2021.pdf',
+			image: false,
+			url: 'https://cdn.discordapp.com/attachments/903085352401662033/903085855021883455/CS361_Assignment_5_Fall_2021.pdf'
+		},
+		{
+			channel: '#random',
+			username: 'mutable',
+			date: '10/27/2021',
 			filetype: 'PNG',
 			filename: 'test_image.png',
 			image: true,
-			url: 'https://cdn.discordapp.com/attachments/902068000927121469/902721484143865897/test_image.png'
-		},
-		{
-			channel: '#general',
-			username: 'mutable#4057',
-			date: '10/25/2021',
-			filetype: 'PDF',
-			filename: 'CS361_Assignment_3_Fall_2021.pdf',
-			image: false,
-			url: 'https://cdn.discordapp.com/attachments/902068000927121469/902279497750044692/CS361_Assignment_3_Fall_2021.pdf'
+			url: 'https://cdn.discordapp.com/attachments/903085420609417267/903085890006548480/test_image.png'
 		}
 	]
 	res.render('home', content)
