@@ -33,7 +33,7 @@ CREATE TABLE messages (
 	channelID varchar(19) NOT NULL,
 	guildID varchar(19) NOT NULL,
 	userID varchar(19),
-	messageDate date NOT NULL,
+	messageDate datetime NOT NULL,
 	FOREIGN KEY (channelID) REFERENCES channels (channelID) ON DELETE CASCADE ON UPDATE RESTRICT,
 	FOREIGN KEY (guildID) REFERENCES guilds (guildID) ON DELETE CASCADE ON UPDATE RESTRICT,
 	FOREIGN KEY (userID) REFERENCES members (userID) ON DELETE SET NULL ON UPDATE RESTRICT

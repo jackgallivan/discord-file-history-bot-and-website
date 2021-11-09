@@ -7,8 +7,8 @@
 -- GUILDS TABLE OPERATIONS
 
 -- CREATE new guild
-INSERT INTO guilds (guildID, guildName)
-VALUES (@guild_id, @guild_name);
+INSERT INTO guilds (guildID, guildName, shortID)
+VALUES (@guild_id, @guild_name, @short_id);
 
 -- READ guild shortID
 SELECT shortID
