@@ -6,6 +6,8 @@
 // [3]	JavaScript Reference
 //		https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
 
+const mysql = require('./dbcon')
+
 const eris = require('eris')
 const credentials = require('../credentials')
 
@@ -40,7 +42,7 @@ bot.registerCommand('init', (msg, args) => {
 bot.registerCommand('url', (msg, args) => {
 	// TODO: query URL from web server
 
-	url = 'http://localhost:3000/a8Djes0'
+	url = 'http://localhost:3000/a8Djes0'  // Example
 
 	return url
 }, {
