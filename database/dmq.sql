@@ -15,6 +15,11 @@ SELECT shortID
 FROM guilds
 WHERE guildID = @guild_id;
 
+-- READ guild guildName
+SELECT guildName
+FROM guilds
+WHERE shortID = @short_ID;
+
 -- UPDATE guild shortID
 UPDATE guilds
 SET shortID = @short_id
@@ -96,7 +101,7 @@ VALUES (@attachment_id, @message_id, @content_type, @filename, @url);
 -- OTHER OPERATIONS
 
 -- READ all attachment for a specified URL path (@short_id)
-SELECT g.guildName, ch.channelName, IF(mem.userNick IS NULL, mem.userNick, mem,userName), msg.messageDate, att.attType, att.attName, att.attURL
+SELECT ch.channelName, IF(mem.userNick IS NULL, mem.userNick, mem,userName), msg.messageDate, att.attType, att.attName, att.attURL
 FROM attachments att
 JOIN messages msg ON att.messageID = msg.messageID
 JOIN members mem ON msg.userID = mem.userID
