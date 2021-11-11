@@ -14,7 +14,8 @@
     "express-handlebars": "^5.3.4",
     "fs": "^0.0.1-security",
     "mysql2": "^2.3.3-rc.0",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
   },
   "devDependencies": {
     "tablefilter": "^0.7.2"
