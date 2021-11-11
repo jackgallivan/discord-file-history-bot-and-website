@@ -7,7 +7,7 @@
 //		https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference
 
 const mysql = require('./dbcon')
-const request = require('request-promise')
+const request = require('request-promise-native')
 
 const eris = require('eris')
 const credentials = require('../credentials')
@@ -40,17 +40,13 @@ bot.on('error', err => {
 /* Requests a short uuid from external microservice */
 
 async function requestShortId () {
-	let resMsg
-	await request('http://3.22.67.101/generate', function (error, response, body) {
-		if (!error && response.statusCode < 400) {
-			const content = JSON.parse(body)
-			resMsg = content.uuid
-			return
-		}
-		console.error(error)
-		return
-	})
-	return resMsg
+	try {
+		const body = await request('http://3.22.67.101/generate')
+		const content = JSON.parse(body)
+		return content.uuid
+	} catch (err) {
+		throw new Error(err)
+	}
 }
 
 
@@ -59,25 +55,24 @@ async function requestShortId () {
 bot.registerCommand('init', async (msg, args) => {
 	// Command generator
 
-	let errMsg
-
 	// Command can only be run if guild info not yet in database
 	// Verify command has not been run before by searching for guild id in database
-	await mysql.pool.query('SELECT * FROM guilds WHERE guildID = ?', [msg.guildID],
-		function (error, results, fields) {
-			if (error) {
-				console.error(error)
-				errMsg = 'Error searching for guild info in database.'
-				return
-			}
-			if (results.length != 0) {
-				errMsg = 'Command can only be run once.\nUse ' + PREFIX + 'help to view other commands.'
-				return
-			}
-		})
-	if (errMsg) return errMsg
+	try {
+		const [guildResults, guildFields] = await mysql.pool.query('SELECT * FROM guilds WHERE guildID = ?', [msg.guildID])
+		if (guildResults.length != 0) {
+			return 'Data already loggged. Command can only be run once.\nUse ' + PREFIX + 'help to view other commands.'
+		}
+	} catch (err) {
+		console.error(err)
+		return 'Error checking database for guild info.'
+	}
 
-	await msg.channel.createMessage('Saving server data. Please wait...')
+	try {
+		await msg.channel.createMessage('Saving server data. Please wait...')
+	} catch (err) {
+		console.error(err)
+		return
+	}
 
 	/* Gather all info needed for database */
 
@@ -87,8 +82,10 @@ bot.registerCommand('init', async (msg, args) => {
 	const guilds = {}
 	guilds.guildID = guild.id
 	guilds.guildName = guild.name
-	guilds.shortID = await requestShortId()  // Create shortID for guild
-	if (!guilds.shortID) {
+	try {
+		guilds.shortID = await requestShortId()  // Create shortID for guild
+	} catch (err) {
+		console.error(error)
 		return 'Error creating URL.'
 	}
 
@@ -110,7 +107,13 @@ bot.registerCommand('init', async (msg, args) => {
 
 		let earliestMsgId = msg.id
 		let earliestMsgTime = msg.timestamp
-		let chMessages = await channel.getMessages({before: earliestMsgId})
+		let chMessages
+		try {
+			chMessages = await channel.getMessages({before: earliestMsgId})
+		} catch (err) {
+			console.error(err)
+			return 'Error getting message history.'
+		}
 		while (chMessages.length > 0) {
 			for (let message of chMessages) {
 				if (message.timestamp < earliestMsgTime) {
@@ -158,89 +161,77 @@ bot.registerCommand('init', async (msg, args) => {
 					})
 				}
 			}
-			chMessages = await channel.getMessages({before: earliestMsgId})
+			try {
+				chMessages = await channel.getMessages({before: earliestMsgId})
+			} catch (err) {
+				console.error(err)
+				return 'Error getting message history.'
+			}
 		}  // while (chMessages.length > 0)
 	}  // for (channel)
-
 
 	/* Add all gathered info to database */
 
 	// Add guild info to database
 	const insertGuild = 'INSERT INTO guilds (guildId, guildName, shortID) ' +
 		'VALUES (?, ?, ?)'
-	await mysql.pool.query(insertGuild, [guilds.guildID, guilds.guildName, guilds.shortID],
-		function (error, results, fields) {
-			if (error) {
-				console.error(error)
-				errMsg = 'Error inserting guild info into database.'
-				return
-			}
-		})
-	if (errMsg) return errMsg
+	try {
+		await mysql.pool.query(insertGuild, [guilds.guildID, guilds.guildName, guilds.shortID])
+	} catch (err) {
+		console.error(err)
+		return 'Error inserting guild info into database'
+	}
 
 	// Add channel info to database (only text channels)
 	const insertChannel = 'INSERT INTO channels (channelID, channelName, guildID) ' +
 		'VALUES (?, ?, ?)'
-	channels.forEach(async ch => {
+	for (const ch of channels) {
 		// Perform an individual query to insert each channel into the database
-		await mysql.pool.query(insertChannel, [ch.channelID, ch.channelName, ch.guildID],
-			function (error, results, fields) {
-				if (error) {
-					console.error(error)
-					errMsg = 'Error inserting channel info into database.'
-					return
-				}
-			})
-	})
-	if (errMsg) return errMsg
+		try {
+			await mysql.pool.query(insertChannel, [ch.channelID, ch.channelName, ch.guildID])
+		} catch (err) {
+			console.error(err)
+			return 'Error inserting channel info into database.'
+		}
+	}
 
 	// Add member info to database (only members who have created a message with an attachment)
 	const insertMember = 'INSERT INTO members (userID, guildID, userName, userNick) ' +
 		'VALUES (?, ?, ?, ?)'
 	for (const mem of members) {
-		// Perform an individual query to insert each member into the database
-		await mysql.pool.query(insertMember, [mem.userID, mem.guildID, mem.userName, mem.userNick],
-			function (error, results, fields) {
-				if (error) {
-					console.error(error)
-					errMsg = 'Error inserting member info into database.'
-					return
-				}
-			})
+		try {
+			await mysql.pool.query(insertMember, [mem.userID, mem.guildID, mem.userName, mem.userNick])
+		} catch (err) {
+			console.error(err)
+			return 'Error inserting member info into database.'
+		}
 	}
-	if (errMsg) return errMsg
 
 	// Add message info to database (only messages containing attachments)
 	const insertMessage = 'INSERT INTO messages (messageID, channelID, guildID, userID, messageDate) ' +
 		'VALUES (?, ?, ?, ?, STR_TO_DATE(?, \'%Y-%m-%dT%T.%fZ\'))'
 	for (const msg of messages) {
 		// Perform an individual query to insert each message into the database
-		await mysql.pool.query(insertMessage, [msg.messageID, msg.channelID, msg.guildID, msg.userID, msg.messageDate],
-			function (error, results, fields) {
-				if (error) {
-					console.error(error)
-					errMsg = 'Error inserting message info into database.'
-					return
-				}
-			})
+		try {
+			await mysql.pool.query(insertMessage, [msg.messageID, msg.channelID, msg.guildID, msg.userID, msg.messageDate])
+		} catch (err) {
+			console.error(err)
+			return 'Error inserting message info into database.'
+		}
 	}
-	if (errMsg) return errMsg
 
 	// Add attachment info to database
 	const insertAttachment = 'INSERT INTO attachments (attachmentID, messageID, attType, attName, attURL) ' +
 		'VALUES (?, ?, ?, ?, ?)'
 	for (const att of attachments) {
 		// Perform an individual query to insert each attachment into the database
-		await mysql.pool.query(insertAttachment, [att.attachmentID, att.messageID, att.attType, att.attName, att.attURL],
-			function (error, results, fields) {
-				if (error) {
-					console.error(error)
-					errMsg = 'Error inserting attachment info into database.'
-					return
-				}
-			})
+		try {
+			await mysql.pool.query(insertAttachment, [att.attachmentID, att.messageID, att.attType, att.attName, att.attURL])
+		} catch (err) {
+			console.error(err)
+			return 'Error inserting attachment info into database.'
+		}
 	}
-	if (errMsg) return errMsg
 
 	const response = 'Initialization complete. Server data logged and ready for web view.\n' +
 		'View server upload history using the following link:\n\n' + WEB_DOMAIN + '/' + guilds.shortID
@@ -264,21 +255,19 @@ bot.registerCommand('url', async (msg, args) => {
 	// Returns URL for server's upload history
 
 	const guildId = msg.guildID
-	let url = WEB_DOMAIN + '/'
 
 	// Query shortId from database
 	const selectShortId = 'SELECT shortID FROM guilds WHERE guildID = ?'
-	await mysql.pool.query(selectShortId, [guildId],
-		function (error, results, fields) {
-			if (error) {
-				console.error(error)
-				return 'Error: Please use ' + PREFIX + 'init command first.'
-			}
-			const shortId = results[0].shortID
-			url += shortId
-		})
-
-	return url
+	try {
+		const [results, fields] = await mysql.pool.query(selectShortId, [guildId])
+		if (results.length == 0) {
+			return 'Error: Please use ' + PREFIX + 'init command first.'
+		}
+		return WEB_DOMAIN + '/' + results[0].shortID
+	} catch (err) {
+		console.error(err)
+		return 'Error getting URL from database.'
+	}
 }, {
 	argsRequired: false,
 	description: "Get the URL to the webpage hosting your server's file upload history."
@@ -288,31 +277,80 @@ bot.registerCommand('url', async (msg, args) => {
 /* Perform action when 'messageCreate' event emitted */
 
 bot.on('messageCreate', async (msg) => {
-	try {
-		const attachments = msg.attachments
+	const messageAttachments = msg.attachments
 
-		// Ignore messages without attachments
-		if (!attachments[0]) {
+	// Ignore messages without attachments
+	if (messageAttachments.length < 1) {
+		return
+	}
+
+	const member = {
+		userID: msg.author.id,
+		guildID: msg.guildID,
+		userName: msg.author.username,
+		userNick: msg.member.nick || null
+	}
+
+	let time = new Date(msg.timestamp)
+
+	const message = {
+		messageID: msg.id,
+		channelID: msg.channel.id,
+		guildID: msg.guildID,
+		userID: msg.author.id,
+		messageDate: time.toISOString()
+	}
+
+	const attachments = []
+	for (const attachment of messageAttachments) {
+		attachments.push({
+			attachmentID: attachment.id,
+			messageID: msg.id,
+			attType: attachment.content_type,
+			attName: attachment.filename,
+			attURL: attachment.url
+		})
+	}
+
+	// See if member info is in database
+	const getMember = 'SELECT * FROM members WHERE members.userID = ? AND members.guildID = ?'
+	try {
+		const [results, fields] = await mysql.pool.query(getMember, [member.userID, member.guildID])
+		if (results.length < 1) {
+			// Add member to database
+			const insertMember = 'INSERT INTO members (userID, guildID, userName, userNick) ' +
+				'VALUES (?, ?, ?, ?)'
+			await mysql.pool.query(insertMember, [member.userID, member.guildID, member.userName, member.userNick])
+		}
+	} catch (err) {
+		console.warn('Error selecting or inserting member info')
+		console.error(err)
+		return
+	}
+
+	// Insert message info into database
+	const insertMessage = 'INSERT INTO messages (messageID, channelID, guildID, userID, messageDate) ' +
+		'VALUES (?, ?, ?, ?, STR_TO_DATE(?, \'%Y-%m-%dT%T.%fZ\'))'
+	try {
+		await mysql.pool.query(insertMessage, [message.messageID, message.channelID, message.guildID, message.userID, message.messageDate])
+	} catch (err) {
+		console.warn('Error inserting message info into database')
+		console.error(err)
+		return
+	}
+
+
+	const insertAttachment = 'INSERT INTO attachments (attachmentID, messageID, attType, attName, attURL) ' +
+		'VALUES (?, ?, ?, ?, ?)'
+	for (const att of attachments) {
+		// Perform an individual query to insert each attachment into the database
+		try {
+			await mysql.pool.query(insertAttachment, [att.attachmentID, att.messageID, att.attType, att.attName, att.attURL])
+		} catch (err) {
+			console.warn('Error inserting attachment info into database')
+			console.error(err)
 			return
 		}
-
-		resMsg = 'Attachment(s) logged!'
-		const insertAttachment = 'INSERT INTO attachments (attachmentID, messageID, attType, attName, attURL) ' +
-			'VALUES (?, ?, ?, ?, ?)'
-		attachments.forEach(async att => {
-			// Perform an individual query to insert each attachment into the database
-			await mysql.pool.query(insertAttachment, [att.attachmentID, att.messageID, att.attType, att.attName, att.attURL],
-				function (error, results, fields) {
-					if (error) {
-						console.error(error)
-						resMsg = 'Error inserting attachment(s) info into database.'
-					}
-				})
-		})
-		await msg.channel.createMessage(resMsg)
-	} catch (err) {
-		console.warn('Error logging message attachment')
-		console.warn(err)
 	}
 })
 
