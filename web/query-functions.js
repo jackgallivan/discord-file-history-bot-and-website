@@ -9,7 +9,7 @@ async function getGuildName(shortID) {
 	const selectGuildName = 'SELECT guildName FROM guilds WHERE shortID = ?'
 	const [guildResults, _] = await mysql.pool.query(selectGuildName, [shortID])
 	if (guildResults.length < 1) {
-		throw 'Guild with corresponding shortID not found in database.'
+		throw new Error('Guild with corresponding shortID not found in database.')
 	}
 	return guildResults[0].guildName
 }

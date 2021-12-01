@@ -4,7 +4,6 @@ const queries = require('./query-functions')
 const handleImages = require('./image-handler')
 const express = require('express')
 const exphbs = require('express-handlebars')
-const request = require('request-promise-native').defaults({encoding: null})
 
 const app = express()
 const hbs = exphbs.create({
@@ -34,7 +33,7 @@ app.get('/:shortID', async (req, res, next) => {
 
 		// Render page
 		res.render('home', context)
-
+		return
 	} catch(err) {
 		next(err)
 		return

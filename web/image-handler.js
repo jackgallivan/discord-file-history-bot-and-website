@@ -26,6 +26,5 @@ async function getThumbnails (row) {
 		form: {image: row.url},
 		resolveWithFullResponse: true
 	})
-	console.log(response.headers)
 	return 'data:' + response.headers['content-type'] + ';base64,' + Buffer.from(response.body).toString('base64')
 }
