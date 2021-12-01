@@ -1,4 +1,4 @@
-module.exports = ServerDataHandler
+// module.exports = ServerDataHandler
 
 const request = require('request-promise-native')
 
@@ -33,7 +33,7 @@ class ServerDataHandler {
 			this.#saveChannelInfo(channel)
 
 			// Process the channel's messages
-			await this.#handleChannelMessages()
+			await this.#handleChannelMessages(channel)
 		}
 	}
 
@@ -73,10 +73,10 @@ class ServerDataHandler {
 		this.errorMsg = 'Error creating URL.'
 		const body = await request('http://3.22.67.101/generate')
 		const content = JSON.parse(body)
-		this.#guild.shortID = content.uuid
+		return content.uuid
 	}
 
-	async #handleChannelMessages () {
+	async #handleChannelMessages (channel) {
 		let [earliestMsgId, earliestMsgTime] = [this.msg.id, this.msg.timestamp]
 		this.errorMsg = 'Error getting message history.'
 		let chMessages = await channel.getMessages({before: earliestMsgId})
@@ -142,7 +142,7 @@ class ServerDataHandler {
 		this.#messages.push({
 			messageID: msg.id,
 			channelID: msg.channel.id,
-			guildID: msg.guild.id,
+			guildID: msg.guildID,
 			userID: msg.author.id,
 			messageDate: time.toISOString()
 		})
@@ -158,3 +158,5 @@ class ServerDataHandler {
 		})
 	}
 }
+
+module.exports = ServerDataHandler

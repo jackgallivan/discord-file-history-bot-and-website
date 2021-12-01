@@ -44,7 +44,8 @@ bot.registerCommand('init', async (msg, args) => {
 	// Command can only be run if guild info not yet in database
 	// Verify command has not been run before by searching for guild id in database
 	try {
-		if (queries.guildExists(msg.guildID)) {
+		const result = await queries.guildExists(msg.guildID)
+		if (result) {
 			return 'Data already logged. Command can only be run once.\nUse ' + PREFIX + 'help to view other commands.'
 		}
 	} catch (err) {
@@ -144,7 +145,7 @@ bot.on('messageCreate', async (msg) => {
 
 	try {
 		// See if member info is in database and add them if not
-		await queries.getThenAddMember([member])
+		await queries.getThenAddMember(member)
 
 		// Add message info to database
 		await queries.addMessages([message])

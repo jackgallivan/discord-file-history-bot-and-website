@@ -115,7 +115,7 @@ async function getThenAddMember(member) {
 		const [results, _] = await mysql.pool.query(getMember, [member.userID, member.guildID])
 		// If member not in database, add them
 		if (results.length < 1) {
-			await addMembers(member)
+			await addMembers([member])
 		}
 	} catch (err) {
 		console.warn('Error selecting or inserting member info')
