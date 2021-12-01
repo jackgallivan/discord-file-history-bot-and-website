@@ -9,4 +9,6 @@ const pool = mysql.createPool({
 })
 const promisePool = pool.promise()
 
-module.exports.pool = promisePool
+module.exports = {
+	pool: promisePool
+}
