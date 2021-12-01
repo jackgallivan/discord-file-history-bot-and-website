@@ -18,7 +18,7 @@ app.set('view engine', 'hbs')
 app.use(express.static('public'))
 
 // Main page display
-app.get('/:shortID', async (req, res, next) => {
+app.get('/history/:shortID', async (req, res, next) => {
 	try {
 		const context = {}
 

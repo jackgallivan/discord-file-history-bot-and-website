@@ -13,7 +13,7 @@ const eris = require('eris')
 const credentials = require('../credentials')
 
 const PREFIX = 'hist!'
-const WEB_DOMAIN = 'http://localhost:3000'
+const WEB_DOMAIN = 'http://localhost:3000/history'
 
 const bot = new eris.CommandClient(credentials.bot_token, {}, {
 	description: 'Provides a web interface to view file uploads to your server.',
