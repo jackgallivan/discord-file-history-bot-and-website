@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', addFilters)
 
 function addFilters() {
 	const data_table = document.querySelector('table')
-	console.log(data_table)
 	tf = new TableFilterClass(data_table)
 	tf.addTableFilter()
 }
