@@ -20,11 +20,6 @@ class TableFilterClass {
 	createTableFilter() {
 		// Adds filter and sorting functionality to the given DOM table element.
 
-		// Get the table header elements
-		const tableHeaders = this.table.querySelector('tr').children
-		// Determine num columns, and num that house buttons (header textContent = 'Update' or 'Delete').
-		const numCols = tableHeaders.length
-
 		// Create filter config for the given table
 		const filterConfig = {
 			base_path: '/tablefilter/',
@@ -74,13 +69,7 @@ class TableFilterClass {
 	}
 
 	addTableFilter() {
-		// Initializee the table filter
+		// Initialize the table filter
 		this.tf.init()
-	}
-
-	refreshFilters() {
-		// Refresh table filter dropdowns
-		const feature = this.tf.feature('dropdown')
-		feature.refreshAll()
 	}
 }
