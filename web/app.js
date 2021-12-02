@@ -10,7 +10,7 @@ const hbs = exphbs.create({
 	layoutsDir: __dirname + '/views/layouts',
 	extname: 'hbs',
 	defaultLayout: 'main',
-	partialsDir: __dirname + '/views/partials'
+	partialsDir: __dirname + '/views/partials',
 })
 
 app.engine('hbs', hbs.engine)
@@ -34,7 +34,7 @@ app.get('/history/:shortID', async (req, res, next) => {
 		// Render page
 		res.render('home', context)
 		return
-	} catch(err) {
+	} catch (err) {
 		next(err)
 		return
 	}
@@ -53,4 +53,6 @@ app.use(function (err, req, res, next) {
 	res.render('500')
 })
 
-app.listen(PORT,() => console.log(`Started on http://localhost:${PORT}\nPress ctrl+c to end`))
+app.listen(PORT, () =>
+	console.log(`Started on http://localhost:${PORT}\nPress ctrl+c to end`)
+)

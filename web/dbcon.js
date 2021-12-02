@@ -5,7 +5,7 @@ const pool = mysql.createPool({
 	host: creds.mysql_host,
 	user: creds.mysql_usr,
 	password: creds.mysql_pw,
-	database: creds.mysql_db
+	database: creds.mysql_db,
 })
 const promisePool = pool.promise()
 

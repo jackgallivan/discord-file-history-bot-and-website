@@ -1,6 +1,6 @@
 module.exports = {
 	getGuildName,
-	getGuildData
+	getGuildData,
 }
 
 const mysql = require('./dbcon')
@@ -17,8 +17,8 @@ async function getGuildName(shortID) {
 async function getGuildData(shortID) {
 	const selectData =
 		'SELECT ch.channelName AS channel, IF(mem.userNick IS NULL, mem.userName, ' +
-			'mem.userNick) AS username, DATE_FORMAT(msg.messageDate, "%Y-%m-%d %T") AS date, ' +
-			'att.attType AS contentType, att.attName AS filename, att.attURL AS url ' +
+		'mem.userNick) AS username, DATE_FORMAT(msg.messageDate, "%Y-%m-%d %T") AS date, ' +
+		'att.attType AS contentType, att.attName AS filename, att.attURL AS url ' +
 		'FROM attachments att ' +
 		'JOIN messages msg ON att.messageID = msg.messageID ' +
 		'JOIN members mem ON msg.userID = mem.userID ' +

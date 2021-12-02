@@ -24,12 +24,12 @@ class TableFilterClass {
 		const filterConfig = {
 			base_path: '/tablefilter/',
 			// Filter types:
-			col_0: 'checklist',		// Channel
-			col_1: 'checklist',		// Username
-			col_2: 'input',				// Date
-			col_3: 'checklist',		// File Type
-			col_4: 'input',				// File Name
-			col_5: 'none',				// Preview
+			col_0: 'checklist', // Channel
+			col_1: 'checklist', // Username
+			col_2: 'input', // Date
+			col_3: 'checklist', // File Type
+			col_4: 'input', // File Name
+			col_5: 'none', // Preview
 			// Data types, used for column sorting:
 			col_types: [
 				'string',
@@ -37,15 +37,15 @@ class TableFilterClass {
 				{type: 'date', locale: 'en-US'},
 				'string',
 				'string',
-				'none'
+				'none',
 			],
 			col_widths: ['150px', '150px', '100px', '120px', '300px', '250px'],
 			popup_filters: {
 				image_active: '/tablefilter/style/themes/custom/icn_filter_black.png',
-				image: '/tablefilter/style/themes/custom/icn_filter_white.png'
+				image: '/tablefilter/style/themes/custom/icn_filter_white.png',
 			},
 			paging: {
-				results_per_page: ['Results per page: ', [10, 25, 50, 100]]
+				results_per_page: ['Results per page: ', [10, 25, 50, 100]],
 			},
 			extensions: [{name: 'sort'}],
 			btn_reset: {
@@ -57,9 +57,11 @@ class TableFilterClass {
 					'Use the drop-down menus to filter by individual values.<br>',
 				btn_text: 'Help',
 				load_filters_on_demand: true,
-				themes: [{
-					name: 'transparent'
-				}]
+				themes: [
+					{
+						name: 'transparent',
+					},
+				],
 			},
 		}
 

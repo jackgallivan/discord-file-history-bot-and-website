@@ -18,13 +18,18 @@ async function handleImages(dataList) {
 	}
 }
 
-async function getThumbnails (row) {
+async function getThumbnails(row) {
 	const response = await request({
 		method: 'POST',
 		url: 'http://flip1.engr.oregonstate.edu:7099/upload',
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		form: {image: row.url},
-		resolveWithFullResponse: true
+		resolveWithFullResponse: true,
 	})
-	return 'data:' + response.headers['content-type'] + ';base64,' + Buffer.from(response.body).toString('base64')
+	const thumbnail =
+		'data' +
+		response.headers['content-type'] +
+		';base64,' +
+		Buffer.from(response.body).toString('base64')
+	return thumbnail
 }

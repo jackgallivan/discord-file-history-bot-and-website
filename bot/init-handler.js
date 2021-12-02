@@ -3,14 +3,13 @@
 const request = require('request-promise-native')
 
 class ServerDataHandler {
-
 	/* Public class fields */
 	msg
 	guildObj
 	errorMsg = ''
 
 	/* Private class fields */
-	#guild = {};
+	#guild = {}
 	#channels = []
 	#members = []
 	#messages = []
@@ -25,10 +24,12 @@ class ServerDataHandler {
 	/* Publc class methods */
 
 	// Finds and stores in class fields all the necessary server info
-	async init () {
+	async init() {
 		await this.#saveGuildInfo()
 
-		for (const channel of this.guildObj.channels.filter(channel => channel.type == 0)) {
+		for (const channel of this.guildObj.channels.filter(
+			(channel) => channel.type == 0
+		)) {
 			// Save channel info
 			this.#saveChannelInfo(channel)
 
@@ -39,44 +40,44 @@ class ServerDataHandler {
 
 	/* Getter methods */
 
-	getGuild () {
+	getGuild() {
 		return this.#guild
 	}
 
-	getChannels () {
+	getChannels() {
 		return this.#channels
 	}
 
-	getMembers () {
+	getMembers() {
 		return this.#members
 	}
 
-	getMessages () {
+	getMessages() {
 		return this.#messages
 	}
 
-	getAttachments () {
+	getAttachments() {
 		return this.#attachments
 	}
 
 	/* Private class methods */
 
 	// Saves guild info
-	async #saveGuildInfo () {
+	async #saveGuildInfo() {
 		this.#guild.guildID = this.guildObj.id
 		this.#guild.guildName = this.guildObj.name
 		this.#guild.shortID = await this.#requestShortId()
 	}
 
 	// Requests a short uuid from external microservice
-	async #requestShortId () {
+	async #requestShortId() {
 		this.errorMsg = 'Error creating URL.'
 		const body = await request('http://3.22.67.101/generate')
 		const content = JSON.parse(body)
 		return content.uuid
 	}
 
-	async #handleChannelMessages (channel) {
+	async #handleChannelMessages(channel) {
 		let [earliestMsgId, earliestMsgTime] = [this.msg.id, this.msg.timestamp]
 		this.errorMsg = 'Error getting message history.'
 		let chMessages = await channel.getMessages({before: earliestMsgId})
@@ -85,7 +86,7 @@ class ServerDataHandler {
 			for (const msg of chMessages) {
 				// Track earliest message in ChMessages array
 				if (msg.timestamp < earliestMsgTime) {
-					[earliestMsgTime, earliestMsgId] = [msg.timestamp, msg.id]
+					;[earliestMsgTime, earliestMsgId] = [msg.timestamp, msg.id]
 				}
 				// Process the message's data
 				await this.#handleMessageData(msg)
@@ -96,7 +97,7 @@ class ServerDataHandler {
 		}
 	}
 
-	async #handleMessageData (msg) {
+	async #handleMessageData(msg) {
 		// Skip messages without attachments
 		if (msg.attachments.length < 1) return
 
@@ -112,49 +113,49 @@ class ServerDataHandler {
 		}
 	}
 
-	#handleMemberData (msg) {
+	#handleMemberData(msg) {
 		// No duplicates
-		if (this.#members.filter(mem => mem.userID == msg.member.id).length < 1) {
+		if (this.#members.filter((mem) => mem.userID == msg.member.id).length < 1) {
 			// Save member info
 			this.#saveMemberInfo(msg)
 		}
 	}
 
-	#saveChannelInfo (channel) {
+	#saveChannelInfo(channel) {
 		this.#channels.push({
 			channelID: channel.id,
 			channelName: channel.name,
-			guildID: channel.guild.id
+			guildID: channel.guild.id,
 		})
 	}
 
-	#saveMemberInfo (msg) {
+	#saveMemberInfo(msg) {
 		this.#members.push({
 			userID: msg.author.id,
 			guildID: msg.guildID,
 			userName: msg.author.username,
-			userNick: msg.member.nick || null
+			userNick: msg.member.nick || null,
 		})
 	}
 
-	#saveMessageInfo (msg) {
+	#saveMessageInfo(msg) {
 		const time = new Date(msg.timestamp)
 		this.#messages.push({
 			messageID: msg.id,
 			channelID: msg.channel.id,
 			guildID: msg.guildID,
 			userID: msg.author.id,
-			messageDate: time.toISOString()
+			messageDate: time.toISOString(),
 		})
 	}
 
-	#saveAttachmentInfo (msg, attachment) {
+	#saveAttachmentInfo(msg, attachment) {
 		this.#attachments.push({
 			attachmentID: attachment.id,
 			messageID: msg.id,
 			attType: attachment.content_type,
 			attName: attachment.filename,
-			attURL: attachment.url
+			attURL: attachment.url,
 		})
 	}
 }
