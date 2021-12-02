@@ -27,7 +27,7 @@ async function getThumbnails(row) {
 		resolveWithFullResponse: true,
 	})
 	const thumbnail =
-		'data' +
+		'data:' +
 		response.headers['content-type'] +
 		';base64,' +
 		Buffer.from(response.body).toString('base64')
