@@ -11,7 +11,7 @@
 	text-align: center;
 }
 
-.channel .username .date .content-type {
+.channel,.username,.date,.content-type {
 	width: 150px;
 	white-space: nowrap;
 	overflow: hidden;

@@ -39,7 +39,6 @@ class TableFilterClass {
 				'string',
 				'none',
 			],
-			col_widths: ['150px', '150px', '100px', '120px', '300px', '250px'],
 			popup_filters: {
 				image_active: '/tablefilter/style/themes/custom/icn_filter_black.png',
 				image: '/tablefilter/style/themes/custom/icn_filter_white.png',
