@@ -1,3 +1,10 @@
+-- From mysql command line client:
+-- USE database_name;
+-- SOURCE /PATH/TO/FILE/load_db.sql;
+--
+-- Or from a terminal:
+-- mysql -u YOUR_USERNAME -p YOUR_DATABASE_NAME < /PATH/TO/FILE/load_db.sql
+
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS messages;

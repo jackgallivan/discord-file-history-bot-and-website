@@ -1,12 +1,12 @@
-const creds = require('../credentials')
-const mysql = require('mysql2')
+const creds = require("../credentials");
+const mysql = require("mysql2");
 const pool = mysql.createPool({
-	connectionLimit: 10,
-	host: creds.mysql_host,
-	user: creds.mysql_usr,
-	password: creds.mysql_pw,
-	database: creds.mysql_db,
-})
-const promisePool = pool.promise()
+  connectionLimit: 10,
+  host: creds.mysql_host, // MySQL server address
+  user: creds.mysql_usr, // MySQL server username
+  password: creds.mysql_pw, // MySQL server password
+  database: creds.mysql_db, // MySQL database name
+});
+const promisePool = pool.promise();
 
-module.exports.pool = promisePool
+module.exports.pool = promisePool;

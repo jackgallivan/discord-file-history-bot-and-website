@@ -2,17 +2,35 @@
 
 The purpose of this project is to provide Discord users an easier way to view the history of files (attachments) uploaded in their server's text channels.
 
-> As the Discord app currently stands, although it is possible to search for and find files, the small search interface is small and cumbersome.
+> As the Discord app currently stands, although it's possible to search for and find files, the search interface is small and cumbersome.
 
-The project requires operation of a discord bot, a website, and a database.  
-- The bot automatically records info to a database, for each file uploaded to your discord server. It also supplies a website URL, with a unique path, for your discord server.
-- The website contains a simple table interface, with filter and sorting options, to view your server's file uploads.
+### Features
+- The bot automatically records message attachment information to a database, and supplies a unique website URL for your discord server.
+- The website contains a minimalist table interface to view your server's file uploads, with filter and sorting options.
 
-> Note: The current project iteration integrates two now-defunct microservices previously hosted by my peers. One service generated UUIDs so that the bot could provide each discord server a unique path for its website URL, and the other service was an image processer that resized and cropped images for previewing on the website. Both of these functions can easily be replaced.
+## Set-up Instructions
+
+The project requires you to have a running MySQL server, and a discord application.  
+- Create your discord application here: https://discord.com/developers/applications
+- Import the MySQL database using the file in `database/load_db.sql`
+- Enter your discord application token and MySQL credentials in `credentials_template.js` then rename it to `credentials.js`
+- Install node packages using the script `npm_install.sh`
+- To begin the services, execute the script `run_all.sh`
+
+> This repo contains four independently run services: The web server, bot server, and two microservices found in `microservices/`.  
+The microservices were originally authored by team members in an academic group setting. The original repos are here:  
+https://github.com/danwsc09/cs361-microservice  
+https://github.com/kange873/CS361-Microservice
+
+### Bot commands
+
+- hist!help : Displays help information
+- hist!init : Initializes bot functionality
+- hist!url : Displays the URL to your server's webpage
 
 ## Preview
 
-### Demo: https://youtu.be/lQe4rczHhVA
+### Video Demo: https://youtu.be/lQe4rczHhVA
 
 #### Discord Interface
 

@@ -1,13 +1,11 @@
 {
-  "name": "web",
+  "name": "discord_history_web_server",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Jack Gallivan",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
